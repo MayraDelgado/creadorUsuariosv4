@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8" />
+
+  <title>Inicio sesion SOPORTE TECNICO</title>
+
+  <link href="css/geotab.css" rel="stylesheet" type="text/css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.min.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@7.29.0/dist/sweetalert2.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.29.0/dist/sweetalert2.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+  <script type="text/javascript" src="../app/js/api.js"></script>
+  <script src="../app/js/loginInicioSession.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      $("#basesdedatos").select2();
+    });
+    $('#basesdedatos').on("change", function (e) {
+      // what you would like to happen
+      console.log(change);
+    });
+
+  </script>
+</head>
+
+<body>
+  <br>
+  <div class="container bordered spaced">
+
+    <div id="signin-content"></div>
+
+    <div id="example-content">
+
+      <div class="description">
+        <h3 style="color:rgb(2, 56, 100)">Link myGeotab</h3>
+        <p id="link">
+          Obteniendo URL...
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script type="text/javascript">
+    /* var bases = {};
+    $.ajax({
+      type: "GET",
+      url: "https://api.metricamovil.com/ApiMetricaMovil/UserCreator/Databases/mdelgado",
+      success: function (result) {
+        console.log("result: ", result);
+        var listaDB = document.getElementById("database");
+        result.forEach(function (resultBD) {
+          listaDB.add(crearItem(resultBD.Database));
+          bases[resultBD.Database] = resultBD;
+        });
+      },
+      error: function (error) {
+        console.log(error);
+      }
+    });
+    var crearItem = function (texto) {
+      var option = document.createElement("option");
+      option.text = texto;
+      return option;
+    }*/
+
+    var geotabSession;
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById("signin-content").style.display = "block";
+
+      getGeotabSession(function () {
+        var baseUrl = getBaseMyGeotabUrl();
+
+
+        document.getElementById("link").innerHTML = "<a href='" + baseUrl + "' target='_blank'>" + baseUrl +
+          "</a>";
+        /*document.getElementById("linkTarget").innerHTML = "<a href='" + targetedUrl + "' target='_blank'>" +
+          targetedUrl + "</a>";*/
+
+      });
+    });
+
+    function getGeotabSession(callback) {
+      api.getSession(function (credentials, server) {
+        geotabSession = {
+          credentials: credentials,
+          server: server
+        };
+        if (callback) {
+          callback();
+        }
+      });
+    }
+
+    function escapeRison(input) {
+      return input.replace("'", "!'");
+    }
+
+    function normalizeServerName(url) {
+      var a = document.createElement("a");
+      a.href = url;
+      var host = a.hostname;
+      return (host && url.indexOf(host) !== -1) ? host : url;
+    }
+
+    function getBaseMyGeotabUrl() {
+      return "https://" + normalizeServerName(geotabSession.server) + "/" + geotabSession.credentials.database + "/#" +
+        "token:(database:" + escapeRison(geotabSession.credentials.database) + "," +
+        "rememberMe:!t,sessionId:&#39;" + geotabSession.credentials.sessionId + "&#39;," +
+        "userName:&#39;" + escapeRison(geotabSession.credentials.userName) + "&#39;)";
+    }
+
+  </script>
+
+  <!--input type="text" placeholder="Usuario" id="user">
+  <input type="password" placeholder="Contraseña" id="pass">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <button id="btnbd">Obtener URL</button>
+  <button id="submit" type="submit">url</button-->
+
+  <!--script>
+    var btnBases = document.getElementById("btnbd");
+
+    var bases = {};
+    $.ajax({
+      type: "GET",
+      url: "https://api.metricamovil.com/ApiMetricaMovil/UserCreator/Databases/mdelgado",
+      success: function (result) {
+        console.log("result: ", result);
+        listaDB = document.getElementById("basesdedatos");
+        result.forEach(function (resultBD) {
+          listaDB.add(crearItem(resultBD.Database));
+          bases[resultBD.Database] = resultBD;
+        });
+      },
+      error: function (error) {
+        console.log(error);
+      }
+    });
+    var crearItem = function (texto) {
+      var option = document.createElement("option");
+      option.text = texto;
+      return option;
+    }
+
+    btnBases.addEventListener("click", boton);
+
+    var boton = function () {
+      var api = GeotabApi(function (authenticationCallback) {
+        var lstUsers = document.getElementById("user").value,
+          lstPass = document.getElementById("pass").value;
+
+        authenticationCallback(listaDB, lstUsers, lstPass,
+          function (errorString) {
+            alert(errorString);
+          });
+      });
+    }
+
+  </script-->
+</body>
+
+</html>
