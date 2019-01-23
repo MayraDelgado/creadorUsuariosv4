@@ -136,7 +136,9 @@ document.addEventListener("DOMContentLoaded", function () {
         value: (debug.enabled === true ? debug.database : undefined)
       }));
       $(document).ready(function () {
-        $("#database").select2();
+        $("#database").select2({
+          tags: true
+        });
       });
       $('#database').on("change", function (e) {
         // what you would like to happen
